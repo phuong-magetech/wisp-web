@@ -1,0 +1,10 @@
+{
+  "title": "Wisp",
+  "hintIdle": "◀▶ choose · pinch to press · ▲▼ pet",
+  "hintFocusing": "Focusing · stopping early still counts",
+  "creditMinutes": "+{{count}} min",
+  "creditSeconds": "+{{count}} s",
+  "controlFocus": "Focus",
+  "controlStop": "Stop",
+  "controlPet": "Pet"
+}

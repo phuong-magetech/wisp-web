@@ -1,0 +1,154 @@
+/*
+ * Additive-display theme. On the glasses' waveguide, #000000 emits no light and reads as
+ * fully transparent (the real world shows through). So the page background is pure black,
+ * and only bright pixels are visible. A *bounded* surface that must read as opaque — a card,
+ * panel or modal — uses a dark gray, never pure black. That stops at the HUD: it is on screen
+ * the whole round, so a filled strip behind it is a permanently lit band across the wearer's
+ * view. See the plugin's core-contract reference.
+ */
+:root {
+  /*
+   * Body text size: the smallest text in the game. 18px rather than the platform's 16px floor,
+   * for comfortable reading on the lens.
+   */
+  --text-body: 18px;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  /* System font stack — no external font downloads (performance guidelines). */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #fff;
+  /*
+   * No `touch-action: none` here: this game is TAP-ONLY, so the EMG index pinch arrives as a
+   * discrete select (`Enter` -> `pinchTap`) and the device sends no pointer stream. Adding the
+   * rule is one of the three edits that opt into the pinch-and-MOVE (drag) channel — see the
+   * plugin's docs/drag-channel.md.
+   */
+}
+
+/* Center a fixed 600x600 stage on desktop; on the device the viewport already is 600x600. */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#game-root {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  overflow: hidden;
+}
+
+/* The game world: CSS shapes positioned with transforms (see src/hud/CssRenderer.ts). */
+#world {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+}
+
+/* DOM HUD overlay: absolutely positioned above the canvas, click-through by default. */
+#hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* 8dp safe margin — interactive elements at the very edge get clipped on device. */
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/*
+ * No `background` anywhere in the HUD on purpose: it is text over the transparent page.
+ * Wisp's ring spans roughly 140-400px from the top, so the HUD sits below it.
+ */
+#timer,
+#credit {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 420px;
+  text-align: center;
+}
+
+#timer {
+  font-size: 28px;
+  font-weight: 600;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+#credit {
+  font-size: 22px;
+  color: #e4e6eb;
+}
+
+/*
+ * Controls: outline only, no fill. They are on screen the whole time, so they follow the HUD rule
+ * (text over the transparent page), with a hairline border. The selected one is bright.
+ * `pointer-events: none` comes from #hud: there is no cursor on the glasses.
+ */
+#controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 474px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.control {
+  /* An <a> and a <button> render alike: centered label, no underline. */
+  display: inline-block;
+  box-sizing: border-box;
+  text-align: center;
+  text-decoration: none;
+  min-width: 112px;
+  padding: 8px 16px;
+  font: inherit;
+  font-size: var(--text-body);
+  color: #b0b3b8;
+  background: none;
+  border: 2px solid #3a3d42;
+  border-radius: 20px;
+  outline: none;
+}
+
+/* The focus link is real navigation, so it takes pointer input like any link would. */
+#btn-focus[href] {
+  pointer-events: auto;
+}
+
+.control.selected,
+.control:focus-visible {
+  color: #fff;
+  border-color: #fff;
+}
+
+#hint {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 24px;
+  text-align: center;
+  font-size: var(--text-body);
+  color: #b0b3b8;
+}
+
+.hidden {
+  display: none !important;
+}
